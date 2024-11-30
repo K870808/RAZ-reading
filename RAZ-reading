@@ -1,0 +1,43 @@
+import android.speech.tts.TextToSpeech;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import java.util.Locale;
+
+public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
+
+    private TextToSpeech tts;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // 初始化TextToSpeech对象
+        tts = new TextToSpeech(this, this);
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            // 设置语言为中文（这里简单设置，可根据实际调整更精准的语言地区配置）
+            int result = tts.setLanguage(Locale.CHINA);
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                // 处理语言不支持情况
+            } else {
+                // 要转换为语音的文字内容
+                String text = "这是安卓上简单测试的语音内容";
+                // 开始语音播放
+                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (tts!= null) {
+            tts.stop();
+            tts.shutdown();
+        }
+    }
+}
